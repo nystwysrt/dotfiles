@@ -14,7 +14,7 @@ alias mkd="mkdir -pv"
 alias ref="shortcuts >/dev/null ; source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
 
 # Pacman
-alias lsp="pacman -Qett --color=always | less"
+alias lsp="pacman -Qett --color=always | more"
 alias pacman="sudo pacman --color auto"
 alias update="sudo pacman -Syuu"
 alias unlock="sudo rm /var/lib/pacman/db.lck"
@@ -30,17 +30,14 @@ alias diff="diff --color=auto"
 alias ccat="highlight --out-format=ansi" # Color cat - print file with syntax highlighting.
 
 alias df='df -h'
-alias rmrf='rm -rf'
+alias rmrf='sudo rm -rf'
 alias ..='cd ..'
-alias vimrc='vim ~/.config/nvim/init.vim'
-alias bashrc='vim ~/.bashrc ; source ~/.bashrc'
-alias xinitrc='vim ~/.xinitrc'
+alias vimrc='nvim ~/.config/nvim/init.vim'
+alias bashrc='nvim ~/.bashrc ; source ~/.bashrc'
+alias xinitrc='nvim ~/.xinitrc'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 alias tmuxrc='vim ~/.tmux.conf'
 alias free="free -mt"
-
-#use all cores
-alias uac="sh ~/.bin/main/000*"
 
 #continue download
 alias wget="wget -c"

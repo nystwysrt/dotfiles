@@ -27,9 +27,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title         tags mask     iscentered   isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,         0,            0,           1,           -1 },
-	{ "Firefox",  "firefox",  "Save As",    0,            1,           0,           -1 },
-	{ "Electron", "electron", "Open File",  0,            1,           1,           -1 },
+	{ "Gimp",     NULL,       NULL,         0,            0,           0,           -1 },
+	{ "firefox",  "firefox",  "Save As",    0,            0,           0,           -1 },
 };
 
 /* layout(s) */
@@ -59,6 +58,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -85,6 +85,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_F9,     spawn,          SHCMD("dmenumount") },
+	{ MODKEY,                       XK_F10,    spawn,          SHCMD("dmenuumount") },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -113,4 +115,5 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
+
 

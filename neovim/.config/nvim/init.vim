@@ -2,18 +2,18 @@ syntax on
 filetype plugin indent on
 set guicursor=
 set nowrap
-set number "how line numbers
+set number
 set nu
 set relativenumber
 set rnu
-set wrap " turn on line wrapping
-set wrapmargin=8 " wrap lines when coming within n characters for side
-set linebreak " set soft wrapping
-set showbreak=... " show ellipsis at breaking
+set wrap
+set wrapmargin=8
+set linebreak
+set showbreak=...
 set smartindent
 set cindent
 set diffopt+=vertical
-set laststatus=2 " show the status line all the time
+set laststatus=2
 set so=7 " set 7 lines to the cursors - when moving vertical
 set hidden " current buffer can be put into background
 set wildmode=list:longest " complete files like a shell

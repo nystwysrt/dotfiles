@@ -77,7 +77,6 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 2
 let g:netrw_altv = 1
 let g:netrw_winsize = 30
-nmap <leader>k :Vexplore<cr>
 
 " toggle cursor line highlighting
 :hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
@@ -94,6 +93,9 @@ endif
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^[=].\+\)\?$'
 
 let mapleader = ','
+
+" netrw shortcut key
+nmap <leader>k :Lexplore <cr> :vertical resize 30<cr>
 
 call plug#begin('~/.config/nvim/plugged')
 	Plug 'morhetz/gruvbox'

@@ -71,6 +71,14 @@ set showbreak=↪
 set splitbelow
 set splitright
 
+" netrw
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 2
+let g:netrw_altv = 1
+let g:netrw_winsize = 30
+nmap <leader>k :Vexplore<cr>
+
 " toggle cursor line highlighting
 :hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
@@ -82,11 +90,6 @@ if has('mouse')
 	set mouse=a
 endif
 
-if &term =~ '256color'
-	" disable background color erase
-	set t_ut=
-endif
-
 " highlight conflicts
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^[=].\+\)\?$'
 
@@ -94,7 +97,6 @@ let mapleader = ','
 
 call plug#begin('~/.config/nvim/plugged')
 	Plug 'morhetz/gruvbox'
-	Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 	Plug 'kien/ctrlp.vim'
 	Plug 'tpope/vim-endwise'
 	Plug 'tpope/vim-sleuth'
@@ -106,6 +108,7 @@ call plug#end()
 
 " Colorscheme and final setup {{{
 set background=dark
+let g:gruvbox_contrast_dark = 'hard'
 colorscheme gruvbox
 
 " make the highlighting of tabs and other non-text less annoying
@@ -113,7 +116,7 @@ highlight SpecialKey ctermfg=14 guifg=#333333
 highlight NonText ctermfg=darkgray guifg=#333333
 
 " make background transparent
-hi Normal guibg=NONE ctermbg=none
+"hi Normal guibg=NONE ctermbg=none
 
 " vim status bar inactive color
 hi StatusLineNC guibg=#0b0b0b ctermfg=white ctermbg=darkgray cterm=NONE gui=NONE
@@ -179,30 +182,3 @@ nnoremap <leader>i : set cursorline! cursorcolumn!<cr>
 " switch tab
 nmap <S-Tab> :tabprev<Return>
 nmap <Tab> :tabnext<Return>
-
-" NERDTree {{{
-	augroup nerdtree
-		autocmd!
-		autocmd FileType nerdtree setlocal nolist " turn off whitespace characters
-		autocmd FileType nerdtree setlocal nocursorline " turn off line highlighting for performance
-	augroup END
-
-	" toggle NERDTree
-	nmap <silent> <leader>k :NERDTreeToggle<cr>
-	" find the current file in nerdtree without needing to reload the drawer
-	nmap <silent> <leader>y :NERDTreeFind<cr>
-
-	let NERDTreeShowHidden=1 " show hidden files
-" }}}
-
-if exists('$TMUX')
-	let &t_SI = "\<Esc>Ptmux;\<Esc>\e[6 q\<Esc>\\"
-	let &t_SR = "\<Esc>Ptmux;\<Esc>\e[4 q\<Esc>\\"
-	let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
-else
-	let &t_SI = "\e[6 q"
-	let &t_SR = "\e[4 q"
-	let &t_EI = "\e[2 q"
-endif
-
-

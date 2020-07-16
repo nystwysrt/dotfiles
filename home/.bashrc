@@ -36,7 +36,7 @@ alias vimrc='nvim ~/.config/nvim/init.vim'
 alias bashrc='nvim ~/.bashrc ; source ~/.bashrc'
 alias xinitrc='nvim ~/.xinitrc'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
-alias tmuxrc='vim ~/.tmux.conf'
+alias tmuxrc='nvim ~/.tmux.conf'
 alias free="free -mt"
 
 #continue download
@@ -65,7 +65,7 @@ alias yta-mp3="youtube-dl --extract-audio --audio-format mp3 "
 alias yta-opus="youtube-dl --extract-audio --audio-format opus "
 alias yta-vorbis="youtube-dl --extract-audio --audio-format vorbis "
 alias yta-wav="youtube-dl --extract-audio --audio-format wav "
-
+alias yta-playlist="youtube-dl -i -f mp4 -o '%(playlist_index)s. %(title)s.%(ext)s'"
 alias ytv-best="youtube-dl -f bestvideo+bestaudio "
 
 #Recent Installed Packages
@@ -108,7 +108,3 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-
-#device mounting
-alias umount='sudo umount'
-alias mount='sudo mount'

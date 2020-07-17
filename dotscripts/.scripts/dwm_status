@@ -47,6 +47,20 @@ print_volume() {
 	echo -e "*muted*"
     fi
 }
+print_vol() {
+    [ $(pamixer --get-mute) = true ] && echo 🔇 && exit
+    vol="$(pamixer --get-volume)"
+
+    if [ "$vol" -gt "70" ]; then
+	icon="🔊"
+    elif [ "$vol" -lt "30" ]; then
+	icon="🔈"
+    else
+	icon="🔉"
+    fi
+
+    echo "$icon$vol%"
+}
 
 print_wifi() {
     ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
@@ -97,7 +111,7 @@ do
     vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
     vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
-    xsetroot -name " rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
+    xsetroot -name "$(print_vol) rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
 
     # Update old values to perform new calculations
     old_received_bytes=$received_bytes

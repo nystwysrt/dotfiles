@@ -48,6 +48,56 @@ print_volume() {
     fi
 }
 
+print_cpubars() {
+    # Cache in tmpfs to improve speed and reduce SSD load
+    cache=/tmp/cpubarscache
+
+    # id total idle
+    stats=$(awk '/cpu[0-9]+/ {printf "%d %d %d\n", substr($1,4), ($2 + $3 + $4 + $5), $5 }' /proc/stat)
+    [ ! -f $cache ] && echo "$stats" > "$cache"
+    old=$(cat "$cache")
+    printf "🪨 "
+    echo "$stats" | while read -r row; do
+	id=${row%% *}
+	rest=${row#* }
+	total=${rest%% *}
+	idle=${rest##* }
+
+	case "$(echo "$old" | awk '{if ($1 == id)
+	    printf "%d\n", (1 - (idle - $3)  / (total - $2))*100 /12.5}' \
+	    id="$id" total="$total" idle="$idle")" in
+
+	    "0") printf "▁";;
+	    "1") printf "▂";;
+	    "2") printf "▃";;
+	    "3") printf "▄";;
+	    "4") printf "▅";;
+	    "5") printf "▆";;
+	    "6") printf "▇";;
+	    "7") printf "█";;
+	    "8") printf "█";;
+	esac
+    done; printf "\\n"
+    echo "$stats" > "$cache"
+}
+
+print_wifi2() {
+    ip=$(ip route get 8.8.8.8 2>/dev/null|grep -Eo 'src [0-9.]+'|grep -Eo '[0-9.]+')
+    SSID=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
+    case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
+	down) wifiicon="📡 " ;;
+	up) wifiicon="$(awk '/^\s*w/ { print "📶", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+    esac
+
+    printf "%s%s-%s" "$wifiicon" "$SSID" "$ip"
+}
+
+print_mem2() {
+    available_mem=$(free -h | sed -n '2{p;q}' | awk '{ print $7}')
+    printf "🧠%sB" "$available_mem"
+
+}
+
 print_wifi() {
     ip=$(ip route get 8.8.8.8 2>/dev/null|grep -Eo 'src [0-9.]+'|grep -Eo '[0-9.]+')
 
@@ -70,28 +120,25 @@ print_mem(){
 }
 
 print_temp(){
-    test -f /sys/class/thermal/thermal_zone0/temp || return 0
-    echo temp:$(head -c 2 /sys/class/thermal/thermal_zone0/temp)C
+    sensors | awk '/Core 0/ {print "🌡" $3}'
 }
 
 print_bat(){
     hash acpi || return 0
     onl="$(grep "on-line" <(acpi -V))"
     charge="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
+
     if test -z "$onl"
     then
-	# suspend when we close the lid
-	#systemctl --user stop inhibit-lid-sleep-on-battery.service
-	echo -e "dc:${charge}"
+	echo -e "🔋 ${charge}"
     else
-	# On mains! no need to suspend
-	#systemctl --user start inhibit-lid-sleep-on-battery.service
-	echo -e "ac:${charge}"
+	echo -e "🔌 ${charge}"
     fi
 }
 
 print_date(){
-    date "+%a %m-%d %T%:::z"
+    #date "+%a %m-%d %T%:::z"
+    date "+%Y %b %d (%a) %I:%M%p"
 }
 
 show_record(){
@@ -111,7 +158,7 @@ do
     vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
     vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
-    xsetroot -name "$(print_mem) rx:$vel_recv tx:$vel_trans $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
+    xsetroot -name "$(print_mem2) rx:$vel_recv tx:$vel_trans $(print_temp) $(print_wifi2) $(print_bat)  $(print_date)"
 
     # Update old values to perform new calculations
     old_received_bytes=$received_bytes

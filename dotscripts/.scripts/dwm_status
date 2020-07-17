@@ -5,11 +5,11 @@
 # This function parses /proc/net/dev file searching for a line containing $interface data.
 # Within that line, the first and ninth numbers after ':' are respectively the received and transmited bytes.
 function get_bytes {
-	#Find active network interface
-	interface=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
-	line=$(grep $interface /proc/net/dev | cut -d ':' -f 2 | awk '{print "received_bytes="$1, "transmitted_bytes="$9}')
-	eval $line
-	now=$(date +%s%N)
+    #Find active network interface
+    interface=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
+    line=$(grep $interface /proc/net/dev | cut -d ':' -f 2 | awk '{print "received_bytes="$1, "transmitted_bytes="$9}')
+    eval $line
+    now=$(date +%s%N)
 }
 
 # Function which calculates the speed using actual and old byte number.
@@ -48,41 +48,8 @@ print_volume() {
     fi
 }
 
-print_cpubars() {
-    # Cache in tmpfs to improve speed and reduce SSD load
-    cache=/tmp/cpubarscache
-
-    # id total idle
-    stats=$(awk '/cpu[0-9]+/ {printf "%d %d %d\n", substr($1,4), ($2 + $3 + $4 + $5), $5 }' /proc/stat)
-    [ ! -f $cache ] && echo "$stats" > "$cache"
-    old=$(cat "$cache")
-    printf "🪨 "
-    echo "$stats" | while read -r row; do
-	id=${row%% *}
-	rest=${row#* }
-	total=${rest%% *}
-	idle=${rest##* }
-
-	case "$(echo "$old" | awk '{if ($1 == id)
-	    printf "%d\n", (1 - (idle - $3)  / (total - $2))*100 /12.5}' \
-	    id="$id" total="$total" idle="$idle")" in
-
-	    "0") printf "▁";;
-	    "1") printf "▂";;
-	    "2") printf "▃";;
-	    "3") printf "▄";;
-	    "4") printf "▅";;
-	    "5") printf "▆";;
-	    "6") printf "▇";;
-	    "7") printf "█";;
-	    "8") printf "█";;
-	esac
-    done; printf "\\n"
-    echo "$stats" > "$cache"
-}
-
-print_wifi2() {
-    ip=$(ip route get 8.8.8.8 2>/dev/null|grep -Eo 'src [0-9.]+'|grep -Eo '[0-9.]+')
+print_wifi() {
+    ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
     SSID=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
     case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
 	down) wifiicon="📡 " ;;
@@ -92,47 +59,27 @@ print_wifi2() {
     printf "%s%s-%s" "$wifiicon" "$SSID" "$ip"
 }
 
-print_mem2() {
+print_mem() {
     available_mem=$(free -h | sed -n '2{p;q}' | awk '{ print $7}')
     printf "🧠%sB" "$available_mem"
-
-}
-
-print_wifi() {
-    ip=$(ip route get 8.8.8.8 2>/dev/null|grep -Eo 'src [0-9.]+'|grep -Eo '[0-9.]+')
-
-    if=wlp3s0
-    while IFS=$': \t' read -r label value
-    do
-	case $label in SSID) SSID=$value
-	;;
-	    signal) SIGNAL=$value
-	;;
-	esac
-    done < <(iw "$if" link)
-
-    echo -e "$SSID $SIGNAL $ip"
-}
-
-print_mem(){
-    memfree=$(($(grep -m1 'MemAvailable:' /proc/meminfo | awk '{print $2}') / 1024))
-    echo -e "mem:$memfree"
 }
 
 print_temp(){
     sensors | awk '/Core 0/ {print "🌡" $3}'
 }
 
-print_bat(){
-    hash acpi || return 0
-    onl="$(grep "on-line" <(acpi -V))"
-    charge="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
+print_bat() {
+    capacity="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
+    status="$(sed "s/[Dd]ischarging/🔋/;s/[Uu]nknown/🔌/;s/[Ff]ull/⚡/" /sys/class/power_supply/BAT*/status)"
 
-    if test -z "$onl"
-    then
-	echo -e "🔋 ${charge}"
+    if [[ "$status" = "🔋" ]]; then
+	if [[ "$capacity" -le 25 ]]; then
+	    echo -e "🔋 ❗${capacity}%"
+	else
+	    echo -e "🔋 ${capacity}%"
+	fi
     else
-	echo -e "🔌 ${charge}"
+	echo -e "🔌 ${capacity}%"
     fi
 }
 
@@ -141,16 +88,8 @@ print_date(){
     date "+%Y %b %d (%a) %I:%M%p"
 }
 
-show_record(){
-    test -f /tmp/r2d2 || return
-    rp=$(cat /tmp/r2d2 | awk '{print $2}')
-    size=$(du -h $rp | awk '{print $1}')
-    echo " $size $(basename $rp)"
-}
-
 while true
 do
-
     # Get new transmitted, received byte number values and current time
     get_bytes
 
@@ -158,7 +97,7 @@ do
     vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
     vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
-    xsetroot -name "$(print_mem2) rx:$vel_recv tx:$vel_trans $(print_temp) $(print_wifi2) $(print_bat)  $(print_date)"
+    xsetroot -name " rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
 
     # Update old values to perform new calculations
     old_received_bytes=$received_bytes
@@ -166,5 +105,4 @@ do
     old_time=$now
 
     sleep 1
-
 done

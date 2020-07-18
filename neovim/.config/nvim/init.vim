@@ -1,5 +1,8 @@
 syntax on
 filetype plugin indent on
+set hidden
+set nobackup
+set nowritebackup
 set guicursor=
 set nowrap
 set number
@@ -25,7 +28,6 @@ set updatetime=50
 set undofile
 set undodir=~/.config/nvim/undodir
 set noswapfile
-set nobackup
 set wildmenu
 set path+=** " Provides tab-completion for all file-related tasks
 set autoread " detect when a file is changed
@@ -34,6 +36,7 @@ set textwidth=120
 set backspace=indent,eol,start " make backspace behave in sane manner
 set clipboard+=unnamedplus
 set nolazyredraw " don't redraw while executing macros
+set shortmess+=c
 
 " searching
 set ignorecase " case insensitive searching
@@ -98,14 +101,15 @@ let mapleader = ','
 nmap <leader>k :Lexplore <cr> :vertical resize 30<cr>
 
 call plug#begin('~/.config/nvim/plugged')
-	Plug 'morhetz/gruvbox'
-	Plug 'kien/ctrlp.vim'
-	Plug 'tpope/vim-endwise'
-	Plug 'tpope/vim-sleuth'
-	Plug 'vim-airline/vim-airline'
-	Plug 'jiangmiao/auto-pairs'
-	Plug 'vim-airline/vim-airline-themes'
-	let g:airline#extensions#tabline#enabled = 1
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'morhetz/gruvbox'
+  Plug 'kien/ctrlp.vim'
+  "Plug 'tpope/vim-endwise'
+  Plug 'tpope/vim-sleuth'
+  Plug 'vim-airline/vim-airline'
+  Plug 'jiangmiao/auto-pairs'
+  Plug 'vim-airline/vim-airline-themes'
+  let g:airline#extensions#tabline#enabled = 1
 call plug#end()
 
 " Colorscheme and final setup {{{
@@ -184,3 +188,5 @@ nnoremap <leader>i : set cursorline! cursorcolumn!<cr>
 " switch tab
 nmap <S-Tab> :tabprev<Return>
 nmap <Tab> :tabnext<Return>
+
+source ~/.config/nvim/coc.vim

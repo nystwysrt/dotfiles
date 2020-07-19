@@ -59,7 +59,7 @@ print_vol() {
 	icon="🔉"
     fi
 
-    echo "$icon$vol%"
+    echo "$icon $vol%"
 }
 
 print_wifi() {

@@ -38,7 +38,7 @@ alias xinitrc='nvim ~/.xinitrc'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 alias tmuxrc='nvim ~/.tmux.conf'
 alias free="free -mt"
-
+alias pacrm="sudo pacman -Rcns"
 #continue download
 alias wget="wget -c"
 

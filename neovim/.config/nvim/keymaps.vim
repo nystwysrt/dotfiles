@@ -56,5 +56,5 @@ nmap <leader>te :tabedit<Return>
 nnoremap <leader>i : set cursorline! cursorcolumn!<cr>
 
 " switch tab
-nmap <S-Tab> :tabprev<Return>
+noremap <S-Tab> :tabprev<Return>
 nmap <Tab> :tabnext<Return>

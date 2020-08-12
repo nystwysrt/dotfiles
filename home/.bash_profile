@@ -5,3 +5,5 @@ export EDITOR="nvim"
 export TERMINAL="st"
 export BROWSER="firefox"
 export READER="zathura"
+export PATH="$PATH:~/development/tools/flutter/bin"
+

@@ -12,6 +12,7 @@ alias vim="nvim"
 alias ka="killall"
 alias mkd="mkdir -pv"
 alias ref="shortcuts >/dev/null ; source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
+alias htop="sudo htop"
 
 # Pacman
 alias lsp="pacman -Qett --color=always | more"

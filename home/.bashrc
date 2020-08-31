@@ -7,6 +7,7 @@ HISTSIZE= HISTFILESIZE= # Infinite history.
 [ -f "$HOME/.shortcuts" ] && source "$HOME/.shortcuts" # Load shortcut aliases
 
 # Some aliases
+alias sudo="sudo "
 alias clr="clear"
 alias vim="nvim"
 alias ka="killall"

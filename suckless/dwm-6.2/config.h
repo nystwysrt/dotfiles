@@ -103,7 +103,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ 0,                            XF86XK_AudioMute,		    spawn,		SHCMD("pamixer -t") },
+	{ 0,                            XF86XK_AudioMute,		spawn,		SHCMD("pamixer -t") },
 	{ 0,                            XF86XK_AudioRaiseVolume,	spawn,		SHCMD("pamixer --allow-boost -i 5") },
 	{ 0,                            XF86XK_AudioLowerVolume,	spawn,		SHCMD("pamixer --allow-boost -d 5") },
 };

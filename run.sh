@@ -5,19 +5,13 @@ cd ~/
 sudo pacman -Syuu
 
 # Install base packages
+yes | sudo pacman -S xorg 
 yes | sudo pacman -S xorg-xinit xorg-xrandr
-yes | sudo pacman -S neovim firefox dmenu
-yes | sudo pacman -S python-pip python2-pip
+yes | sudo pacman -S neovim firefox
 yes | sudo pacman -S git curl wget
-yes | sudo pacman -S xbindkeys
-yes | sudo pacman -S alsa-utils
+yes | sudo pacman -S xbindkeys xclip unclutter feh picom
+yes | sudo pacman -S alsa alsa-utils
 yes | sudo pacman -S ttf-font-awesome
-
-# python linter
-#sudo pip install flake8
-
-# Install vundle for vim
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Install yaourt
 git clone https://aur.archlinux.org/package-query.git

@@ -9,5 +9,6 @@ export READER="zathura"
 export ANDROID_STUDIO="$HOME/development/tools/android-studio/bin/"
 export ANDROID_SDK_ROOT="$HOME/development/tools/android/sdk/"
 export FLUTTER="$HOME/development/tools/flutter/bin"
-export PATH="$PATH:$ANDROID_SDK_ROOT:$ANDROID_STUDIO:$FLUTTER:$SCRIPTS:$ARDUINO"
+export VIMLATEX="$HOME/.config/nvim/plugged/vim-live-latex-preview/bin/"
+export PATH="$PATH:$ANDROID_SDK_ROOT:$ANDROID_STUDIO:$FLUTTER:$SCRIPTS:$ARDUINO:$VIMLATEX"
 

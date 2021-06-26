@@ -104,8 +104,11 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'jiangmiao/auto-pairs'
   Plug 'vim-airline/vim-airline-themes'
+  Plug 'lervag/vimtex'
   let g:airline#extensions#tabline#enabled = 1
 call plug#end()
+
+let g:vimtex_view_general_viewer = 'zathura'
 
 " Colorscheme and final setup {{{
 set background=dark

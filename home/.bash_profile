@@ -1,3 +1,4 @@
+# Get the aliases and functions
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 export TERM="screen-256color"
@@ -9,4 +10,5 @@ export BROWSER="firefox"
 export READER="zathura"
 export PATH="$PATH:$SCRIPTS"
 
-[[ -z "$DISPLAY" ]] && [[ "$(tty)" = /dev/tty1 ]] && startx
+remaps &
+#[[ -z "$DISPLAY" ]] && [[ "$(tty)" = /dev/tty1 ]] && startx

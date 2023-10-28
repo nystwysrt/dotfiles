@@ -10,5 +10,4 @@ export BROWSER="firefox"
 export READER="zathura"
 export PATH="$PATH:$SCRIPTS"
 
-remaps &
 #[[ -z "$DISPLAY" ]] && [[ "$(tty)" = /dev/tty1 ]] && startx

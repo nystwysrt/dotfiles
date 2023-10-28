@@ -16,6 +16,7 @@ alias :q="exit"
 alias :c="clear"
 alias smi="sudo make install"
 alias chmox="chmod +x"
+alias batt="acpi -b"
 
 alias lynx="exec lynx"
 alias ?="duck"

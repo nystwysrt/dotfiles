@@ -31,6 +31,7 @@ alias xinstall='sudo xbps-install'
 alias xremove='sudo xbps-remove'
 alias xquery='sudo xbps-query -Rs'
 
+alias libopencm3-template="git clone --recurse-submodules https://github.com/libopencm3/libopencm3-template.git"
 # Adding color
 alias ls='ls -hN --color=auto --group-directories-first'
 alias ll='ls -alh --group-directories-first --color=always'

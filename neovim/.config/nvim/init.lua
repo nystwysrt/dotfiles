@@ -45,6 +45,7 @@ vim.g.maplocalleader = ' '
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.foldmethod = "manual"
+vim.opt.foldenable = false
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info

@@ -42,32 +42,18 @@ print_volume() {
     is_muted="$(amixer get Master | egrep "^  Mono"| cut -d"[" -f 4 | cut -d"]" -f 1)"
 
     if [[ $is_muted == on ]]; then
-	echo -e "vol:${volume}"
+	echo -e "󰕾 ${volume}"
     else
-	echo -e "*muted*"
+	echo -e "󰝟 *muted*"
     fi
-}
-print_vol() {
-    [ $(pamixer --get-mute) = true ] && echo 🔇 && exit
-    vol="$(pamixer --get-volume)"
-
-    if [ "$vol" -gt "70" ]; then
-	icon="🔊"
-    elif [ "$vol" -lt "30" ]; then
-	icon="🔈"
-    else
-	icon="🔉"
-    fi
-
-    echo "$icon $vol%"
 }
 
 print_wifi() {
     ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
     SSID=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
     case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
-	down) wifiicon="📡 " ;;
-	up) wifiicon="$(awk '/^\s*w/ { print "📶", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+	down) wifiicon="󰖪  " ;;
+	up) wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
     esac
 
     printf "%s%s %s" "$wifiicon" "$SSID" "$ip"
@@ -84,16 +70,16 @@ print_temp(){
 
 print_bat() {
     capacity="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
-    status="$(sed "s/[Dd]ischarging/🔋/;s/[Uu]nknown/🔌/;s/[Ff]ull/⚡/" /sys/class/power_supply/BAT*/status)"
+    status="$(sed "s/[Dd]ischarging/󰁹/;s/[Cc]harging/󰂅/;s/[Ff]ull/󰂅/" /sys/class/power_supply/BAT*/status)"
 
-    if [[ "$status" = "🔋" ]]; then
+    if [[ "$status" = "󰂅" ]]; then
 	if [[ "$capacity" -le 25 ]]; then
-	    echo -e "🔋 ❗${capacity}%"
+	    echo -e "󰂆 ${capacity}%"
 	else
-	    echo -e "🔋 ${capacity}%"
+	    echo -e "󰢝 ${capacity}%"
 	fi
     else
-	echo -e "🔌 ${capacity}%"
+	echo -e "${status} ${capacity}%"
     fi
 }
 
@@ -112,7 +98,7 @@ do
     vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
     #xsetroot -name "$(print_vol) rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
-    xsetroot -name "$(print_vol) $(print_wifi) $(print_bat) $(print_date)"
+    xsetroot -name "$(print_volume) $(print_wifi) $(print_bat) $(print_date)"
 
     # Update old values to perform new calculations
     old_received_bytes=$received_bytes

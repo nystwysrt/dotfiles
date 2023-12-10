@@ -18,7 +18,7 @@ alias smi="sudo make install"
 alias chmox="chmod +x"
 alias battery="acpi -b"
 
-alias lynx="exec lynx"
+alias lynx="exec lynx.sh"
 alias ?="duck"
 alias ??="google"
 

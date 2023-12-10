@@ -8,8 +8,8 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=MToolkit
 wmname LG3D
 
-xbacklight -set 30.0
+#xbacklight -set 30.0
 remaps &
-#~/.scripts/dwm_status &
+~/scripts/dwm_status &
 exec dwm
 

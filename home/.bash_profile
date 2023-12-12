@@ -8,6 +8,7 @@ export EDITOR="nvim"
 export TERMINAL="st"
 export BROWSER="firefox"
 export READER="zathura"
-export PATH="$PATH:$SCRIPTS"
+export ARDUINO="/$HOME/opt/arduino-ide_2.2.1" 
+export PATH="$PATH:$SCRIPTS:$ARDUINO"
 
 #[[ -z "$DISPLAY" ]] && [[ "$(tty)" = /dev/tty1 ]] && startx

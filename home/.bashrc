@@ -25,6 +25,7 @@ alias ??="google"
 # Faster cd to directory
 alias dot="cd $DOTFILES"
 alias scripts="cd $SCRIPTS"
+alias repos="cd ~/Repos"
 
 # XBPS
 alias xinstall='sudo xbps-install'

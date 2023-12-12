@@ -52,8 +52,8 @@ print_wifi() {
     ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
     SSID=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
     case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
-	down) wifiicon="󰖪  " ;;
-	up) wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+	down) wifiicon=" *down*" ;;
+	up) wifiicon="$(awk '/^\s*w/ { print "", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
     esac
 
     printf "%s%s %s" "$wifiicon" "$SSID" "$ip"

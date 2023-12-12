@@ -22,6 +22,9 @@ alias lynx="exec lynx.sh"
 alias ?="duck"
 alias ??="google"
 
+# Git
+alias gs="git status"
+
 # Faster cd to directory
 alias dot="cd $DOTFILES"
 alias scripts="cd $SCRIPTS"

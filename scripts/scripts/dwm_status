@@ -73,13 +73,13 @@ print_bat() {
     status="$(sed "s/[Dd]ischarging/󰁹/;s/[Cc]harging/󰂅/;s/[Ff]ull/󰂅/" /sys/class/power_supply/BAT*/status)"
 
     if [[ "$status" = "󰂅" ]]; then
-	if [[ "$capacity" -le 25 ]]; then
-	    echo -e "󰂆 ${capacity}%"
-	else
-	    echo -e "󰢝 ${capacity}%"
+        if [[ "$capacity" -le 25 ]]; then
+            echo -e "󰂆 ${capacity}%"
+        else
+            echo -e "󰢝 ${capacity}%"
 	fi
     else
-	echo -e "${status} ${capacity}%"
+        echo -e "${status} ${capacity}%"
     fi
 }
 

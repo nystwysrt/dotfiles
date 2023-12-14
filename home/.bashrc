@@ -25,6 +25,9 @@ alias ??="google"
 # Git
 alias gs="git status"
 
+# Projects dir
+alias dm2="cd ~/projects/darkstar_m2"
+
 # Faster cd to directory
 alias dot="cd $DOTFILES"
 alias scripts="cd $SCRIPTS"

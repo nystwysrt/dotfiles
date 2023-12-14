@@ -9,5 +9,6 @@ export AWT_TOOLKIT=MToolkit
 wmname LG3D
 
 #xbacklight -set 30.0
+remaps &
 ~/scripts/dwm_status &
 exec dwm

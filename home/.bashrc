@@ -24,9 +24,12 @@ alias ??="google"
 
 # Git
 alias gs="git status"
+alias gp="git push"
+alias ga="git add ."
+alias gc="git commit -m"
 
 # Projects dir
-alias dm2="cd ~/projects/darkstar_m2"
+alias dm2="cd ~/projects/dm2"
 
 # Faster cd to directory
 alias dot="cd $DOTFILES"

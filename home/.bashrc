@@ -30,6 +30,7 @@ alias gc="git commit -m"
 
 # Projects dir
 alias dm2="cd ~/projects/dm2"
+alias dm3="cd ~/projects/dm3"
 
 # Faster cd to directory
 alias dot="cd $DOTFILES"

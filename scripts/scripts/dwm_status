@@ -42,9 +42,9 @@ print_volume() {
     is_muted="$(amixer get Master | egrep "^  Mono"| cut -d"[" -f 4 | cut -d"]" -f 1)"
 
     if [[ $is_muted == on ]]; then
-	echo -e "󰕾 ${volume}"
+	echo -e "V: ${volume}"
     else
-	echo -e "󰝟 *muted*"
+	echo -e "V: *muted*"
     fi
 }
 
@@ -52,8 +52,8 @@ print_wifi() {
     ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
     SSID=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
     case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
-	down) wifiicon=" *down*" ;;
-	up) wifiicon="$(awk '/^\s*w/ { print "", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+	down) wifiicon="W: *down*" ;;
+	up) wifiicon="$(awk '/^\s*w/ { print "W:", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
     esac
 
     printf "%s%s %s" "$wifiicon" "$SSID" "$ip"
@@ -83,9 +83,24 @@ print_bat() {
     fi
 }
 
+print_bat2(){
+	hash acpi || return 0
+	onl="$(grep "on-line" <(acpi -V))"
+	charge="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
+	if test -z "$onl"
+	then
+        # On battery!
+		echo -e "B: -${charge}"
+	else
+		# On mains! no need to suspend
+		echo -e "B: +${charge}"
+	fi
+}
+
+
 print_date(){
-    date="$(date "+%Y %b %d (%a) %I:%M%p")"
-    echo -e " ${date}"
+    date="$(date "+%Y-%m-%d(%a) %I:%M%p")"
+    echo -e "${date}"
 }
 
 while true
@@ -98,7 +113,7 @@ do
     vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
     #xsetroot -name "$(print_vol) rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
-    xsetroot -name "$(print_volume) $(print_wifi) $(print_bat) $(print_date)"
+    xsetroot -name "$(print_volume)|$(print_wifi)|$(print_bat2)|$(print_date)"
 
     # Update old values to perform new calculations
     old_received_bytes=$received_bytes

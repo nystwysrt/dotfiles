@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #hsetroot -solid '#000000'
-#feh --bg-scale ~/Downloads/wallpapers/forest.jpg
+feh --bg-scale ~/wall.jpg
 #picom -CGb --config ~/.config/picom/picom.conf
 
 export _JAVA_AWT_WM_NONREPARENTING=1

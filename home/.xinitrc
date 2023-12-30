@@ -10,5 +10,5 @@ wmname LG3D
 
 #xbacklight -set 30.0
 remaps &
-~/scripts/dwm_status &
+dwm_status &
 exec dwm

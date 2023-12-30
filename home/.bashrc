@@ -17,6 +17,7 @@ alias :c="clear"
 alias smi="sudo make install"
 alias chmox="chmod +x"
 alias battery="acpi -b"
+alias vim="nvim"
 
 alias lynx="exec lynx.sh"
 alias ?="duck"

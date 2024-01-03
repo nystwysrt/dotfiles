@@ -121,4 +121,4 @@
 
 ;; Theme customization
 (add-hook 'after-init-hook
-          (lambda () (load-theme 'cyberpunk t)))
+          (lambda () (load-theme 'gruber-darker t)))

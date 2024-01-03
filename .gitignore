@@ -9,3 +9,5 @@ emacs/.config/emacs/eln-cache/
 emacs/.config/emacs/ido*
 emacs/.config/emacs/places
 emacs/.config/emacs/transient
+emacs/.config/emacs/eshell
+emacs/.config/emacs/auto-save-list/

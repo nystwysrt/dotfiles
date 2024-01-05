@@ -58,7 +58,7 @@ alias ccat="highlight --out-format=ansi" # Color cat - print file with syntax hi
 alias df='df -h'
 alias rmrf='rm -rf'
 alias ..='cd ..'
-alias vimrc='nvim ~/.config/nvim/init.vim'
+alias nvimrc='nvim ~/.config/nvim/init.lua'
 alias bashrc='nvim ~/.bashrc ; source ~/.bashrc'
 alias bashprofilerc='nvim ~/.bash_profile ; source ~/.bash_profile'
 alias xinitrc='nvim ~/.xinitrc'

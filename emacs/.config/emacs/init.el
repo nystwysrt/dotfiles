@@ -61,13 +61,51 @@
   :config
   (evil-collection-init))
 
-;; Smex
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; which-key
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 1))
 
-;; Enable ido mode
-(ido-mode t)
+;; Vertico completion
+(use-package vertico
+  :ensure t
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-f" . vertico-exit)
+              :map minibuffer-local-map
+              ("M-h" . backward-kill-word))
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+
+;; Remember minibuffer prompt history
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; company
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefi-length 1)
+  (company-idle-delay 0.0))
+
+;; lsp-mode
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :init (setq lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-enable-which-key-integration t))
 
 ;; Set fonts
 (set-frame-font "JetBrainsMonoNerdFont 11" nil t)
@@ -83,10 +121,6 @@
 
 ;; Remembering recently edited files
 (recentf-mode 1)
-
-;; Remember minibuffer prompt history
-(setq history-length 25)
-(savehist-mode 1)
 
 ;; Remember and restore the last cursor location of opened files
 (save-place-mode 1)

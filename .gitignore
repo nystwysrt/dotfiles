@@ -11,3 +11,7 @@ emacs/.config/emacs/places
 emacs/.config/emacs/transient
 emacs/.config/emacs/eshell
 emacs/.config/emacs/auto-save-list/
+emacs/.config/emacs/elpa
+emacs/.config/emacs/.lsp-session-v1
+emacs/.config/emacs/.cache
+emacs/.config/emacs/elpa/**

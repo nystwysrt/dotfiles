@@ -15,3 +15,7 @@ emacs/.config/emacs/elpa
 emacs/.config/emacs/.lsp-session-v1
 emacs/.config/emacs/.cache
 emacs/.config/emacs/elpa/**
+emacs/.config/emacs/var/
+emacs/.config/emacs/.emacs.d/
+emacs/.config/emacs/.dap-breakpoints
+emacs/.config/emacs/.last-package-update-day

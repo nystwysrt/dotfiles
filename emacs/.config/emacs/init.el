@@ -1,3 +1,26 @@
+;; Initialize package sources
+(require 'package)
+(setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+
+;; update packages list if we are on a new install
+(unless package-archive-contents (package-refresh-contents))
+
+;; Initialize use-package on non linux platforms
+(unless (package-installed-p 'use-package) (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Move customization variables to a separate file and load it
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
+
+;; load custom config/functions
+(load-file "~/.config/emacs/.emacs.d/functions.el")
+
 ;; Dont show splash screen
 (setq-default inhibit-startup-message t)
 
@@ -9,22 +32,6 @@
 ;; Disable bell notification
 (setq-default visible-bell nil)
 
-;; Initialize package sources
-(require 'package)
-(setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless package-archive-contents
-    (package-refresh-contents))
-
-;; Initialize use-package on non linux platforms
-(unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
                 term-mode-hook
@@ -33,82 +40,107 @@
                 eshell-mode-hook))
         (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; Keybindings Configuration
+;; Set fonts
+(set-face-attribute 'default nil :font "JetBrainsMonoNerdFont" :height 120)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "JetBrainsMonoNerdFont" :height 120)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "JetBrainsMonoNerdFont" :height 120 :weight 'regular)
+
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; narrow framework
+(use-package smex :ensure t)
+(use-package counsel :ensure t)
+(use-package ivy :ensure t)
+(use-package counsel-projectile :ensure t)
+
 ;; evil mode
 (use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-  
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-collection
   :after evil
-  :config
-  (evil-collection-init))
+  :config (evil-collection-init))
+
+;; all-the-icons
+(use-package all-the-icons)
+
+;; doom-modeline
+(use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
 
 ;; which-key
 (use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 1))
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config (setq which-key-idle-delay 1))
 
 ;; Vertico completion
 (use-package vertico
-  :ensure t
-  :bind (:map vertico-map
-              ("C-j" . vertico-next)
-              ("C-k" . vertico-previous)
-              ("C-f" . vertico-exit)
-              :map minibuffer-local-map
+    :ensure t
+    :bind
+        (:map vertico-map
+            ("C-j" . vertico-next)
+            ("C-k" . vertico-previous)
+            ("C-f" . vertico-exit))
+        (:map minibuffer-local-map
               ("M-h" . backward-kill-word))
-  :custom
-  (vertico-cycle t)
-  :init
-  (vertico-mode))
+    :custom (vertico-cycle t)
+    :init (vertico-mode))
 
 ;; Remember minibuffer prompt history
-(use-package savehist
-  :init
-  (savehist-mode))
-
-;; company
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefi-length 1)
-  (company-idle-delay 0.0))
+(use-package savehist :init (savehist-mode))
 
 ;; lsp-mode
 (use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :init (setq lsp-keymap-prefix "C-c l")
-  :config
-  (lsp-enable-which-key-integration t))
+    :commands (lsp lsp-deferred)
+    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :init (setq lsp-keymap-prefix "C-c l")
+    :config (lsp-enable-which-key-integration t))
 
-;; Set fonts
-(set-frame-font "JetBrainsMonoNerdFont 11" nil t)
+;; lsp-ui
+(use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom)
+    (lsp-ui-sideline-show-diagnostics t)
+    (lsp-ui-sideline-show-code-actions t)
+    (lsp-ui-sideline-show-hover t))
+
+;; company
+(use-package company
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind
+        (:map company-active-map ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map ("<tab>" . company-indent-or-complete-common))
+    :custom
+        (company-minimum-prefi-length 1)
+        (company-idle-delay 0.0))
+
+;; company-box
+(use-package company-box
+    :hook (company-mode . company-box-mode))
 
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode t)
@@ -125,10 +157,6 @@
 ;; Remember and restore the last cursor location of opened files
 (save-place-mode 1)
 
-;; Move customization variables to a separate file and load it
-(setq custom-file (locate-user-emacs-file "custom-vars.el"))
-(load custom-file 'noerror 'nomessage)
-
 ;; Dont pop up UI dialogs when prompting
 (setq use-dialog-box nil)
 
@@ -138,21 +166,24 @@
 ;; Revert Dired and other buffers
 (setq global-auto-revert-non-file-buffers t)
 
-;; Tabs
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq-default c-basic-offset 4)
-
 ;; 'y' for 'yes', 'n' for 'no'
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Auto indent after return
 (global-set-key (kbd "RET") 'newline-and-indent)
 
+;; Tabs
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
+(setq-default c-basic-offset 4)
+
 ;; Dired
 (setq dired-listing-switches "-agho --group-directories-first")
 (setq dired-kill-when-opening-new-dired-buffer t)
 
+;; global hooks
+;;(add-hook 'c-mode-hook 'development-mode)
+
 ;; Theme customization
 (add-hook 'after-init-hook
-          (lambda () (load-theme 'gruber-darker t)))
+    (lambda () (load-theme 'doom-dracula t)))

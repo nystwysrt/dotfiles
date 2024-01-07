@@ -1,64 +1,32 @@
 ;; Initialize package sources
 (require 'package)
-(setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
 
 ;; update packages list if we are on a new install
-(unless package-archive-contents (package-refresh-contents))
+(unless package-archive-contents
+    (package-refresh-contents))
 
 ;; Initialize use-package on non linux platforms
-(unless (package-installed-p 'use-package) (package-install 'use-package))
+(unless (package-installed-p 'use-package)
+    (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; Theme customization
+(add-hook 'after-init-hook
+    (lambda () (load-theme 'cyberpunk t)))
 
 ;; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
-;; load custom config/functions
-(load-file "~/.config/emacs/.emacs.d/functions.el")
+(load-file "~/.config/emacs/.emacs.rc/config.el")
 
-;; Dont show splash screen
-(setq-default inhibit-startup-message t)
-
-;; Turn off some unneeded UI elements
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-
-;; Disable bell notification
-(setq-default visible-bell nil)
-
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                treemacs-mode-hook
-                eshell-mode-hook))
-        (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-;; Set fonts
-(set-face-attribute 'default nil :font "JetBrainsMonoNerdFont" :height 120)
-
-;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "JetBrainsMonoNerdFont" :height 120)
-
-;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "JetBrainsMonoNerdFont" :height 120 :weight 'regular)
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; narrow framework
-(use-package smex :ensure t)
-(use-package counsel :ensure t)
-(use-package ivy :ensure t)
-(use-package counsel-projectile :ensure t)
-
-;; evil mode
+; evil mode
 (use-package evil
     :init
     (setq evil-want-integration t)
@@ -84,11 +52,6 @@
 ;; all-the-icons
 (use-package all-the-icons)
 
-;; doom-modeline
-(use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
-
 ;; which-key
 (use-package which-key
     :init (which-key-mode)
@@ -104,19 +67,34 @@
             ("C-k" . vertico-previous)
             ("C-f" . vertico-exit))
         (:map minibuffer-local-map
-              ("M-h" . backward-kill-word))
+            ("M-h" . backward-kill-word))
     :custom (vertico-cycle t)
     :init (vertico-mode))
 
 ;; Remember minibuffer prompt history
-(use-package savehist :init (savehist-mode))
+(use-package savehist
+    :init (savehist-mode))
 
 ;; lsp-mode
 (use-package lsp-mode
     :commands (lsp lsp-deferred)
-    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :hook (lsp-mode . lsp-enable-which-key-integration)
     :init (setq lsp-keymap-prefix "C-c l")
-    :config (lsp-enable-which-key-integration t))
+    :config
+        (lsp-enable-which-key-integration t)
+        ;; Performance
+        (setq gc-cons-threshold 100000000)
+        (setq lsp-completion-provider :capf)
+        (setq lsp-idle-delay 0.500)
+        (setq lsp-log-io nil)
+        ;; Annoying lsp stuff
+        (setq lsp-headerline-breadcrumb-enable nil)
+        (setq lsp-enable-links nil)
+        (setq lsp-signature-render-documentation nil)
+        (setq lsp-ui-doc-enable nil)
+        (setq lsp-completion-enable-additional-text-edit nil)
+        (setq web-mode-enable-current-element-highlight t))
+
 
 ;; lsp-ui
 (use-package lsp-ui
@@ -125,57 +103,25 @@
     (lsp-ui-doc-position 'bottom)
     (lsp-ui-sideline-show-diagnostics t)
     (lsp-ui-sideline-show-code-actions t)
-    (lsp-ui-sideline-show-hover t))
+    (lsp-ui-sideline-show-hover nil))
 
 ;; company
 (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
+    :after
+        lsp-mode
+    :hook
+        (lsp-mode . company-mode)
     :bind
         (:map company-active-map ("<tab>" . company-complete-selection))
         (:map lsp-mode-map ("<tab>" . company-indent-or-complete-common))
     :custom
-        (company-minimum-prefi-length 1)
+        (company-minimum-prefix-length 1)
         (company-idle-delay 0.0))
 
 ;; company-box
 (use-package company-box
-    :hook (company-mode . company-box-mode))
-
-;; Display line numbers in every buffer
-(global-display-line-numbers-mode t)
-
-;; Highlight the current line
-(global-hl-line-mode 1)
-
-;; Blink the cursor
-(blink-cursor-mode 1)
-
-;; Remembering recently edited files
-(recentf-mode 1)
-
-;; Remember and restore the last cursor location of opened files
-(save-place-mode 1)
-
-;; Dont pop up UI dialogs when prompting
-(setq use-dialog-box nil)
-
-;; Revert buffers when the underlying file has changed
-(setq global-auto-revert-mode 1)
-
-;; Revert Dired and other buffers
-(setq global-auto-revert-non-file-buffers t)
-
-;; 'y' for 'yes', 'n' for 'no'
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; Auto indent after return
-(global-set-key (kbd "RET") 'newline-and-indent)
-
-;; Tabs
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq-default c-basic-offset 4)
+    :hook
+        (company-mode . company-box-mode))
 
 ;; Dired
 (setq dired-listing-switches "-agho --group-directories-first")
@@ -184,6 +130,3 @@
 ;; global hooks
 ;;(add-hook 'c-mode-hook 'development-mode)
 
-;; Theme customization
-(add-hook 'after-init-hook
-    (lambda () (load-theme 'doom-dracula t)))

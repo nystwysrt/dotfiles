@@ -1,5 +1,7 @@
 ;; Dont show splash screen
 (setq-default inhibit-startup-message t)
+(setq-default initial-scratch-message "")
+(kill-buffer "*Messages*")
 
 ;; Turn off some unneeded UI elements
 (menu-bar-mode 0)

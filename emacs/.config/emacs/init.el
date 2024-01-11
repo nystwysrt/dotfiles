@@ -18,13 +18,14 @@
 
 ;; Theme customization
 (add-hook 'after-init-hook
-    (lambda () (load-theme 'cyberpunk t)))
+    (lambda () (load-theme 'gruber-darker t)))
 
 ;; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
 (load-file "~/.config/emacs/.emacs.rc/config.el")
+(load-file "~/.config/emacs/.emacs.rc/functions.el")
 
 ; evil mode
 (use-package evil
@@ -48,9 +49,6 @@
 (use-package evil-collection
   :after evil
   :config (evil-collection-init))
-
-;; all-the-icons
-(use-package all-the-icons)
 
 ;; which-key
 (use-package which-key
@@ -81,19 +79,19 @@
     :hook (lsp-mode . lsp-enable-which-key-integration)
     :init (setq lsp-keymap-prefix "C-c l")
     :config
-        (lsp-enable-which-key-integration t)
-        ;; Performance
-        (setq gc-cons-threshold 100000000)
-        (setq lsp-completion-provider :capf)
-        (setq lsp-idle-delay 0.500)
-        (setq lsp-log-io nil)
-        ;; Annoying lsp stuff
-        (setq lsp-headerline-breadcrumb-enable nil)
-        (setq lsp-enable-links nil)
-        (setq lsp-signature-render-documentation nil)
-        (setq lsp-ui-doc-enable nil)
-        (setq lsp-completion-enable-additional-text-edit nil)
-        (setq web-mode-enable-current-element-highlight t))
+    (lsp-enable-which-key-integration t)
+    ;; Performance
+    (setq gc-cons-threshold 100000000)
+    (setq lsp-completion-provider :capf)
+    (setq lsp-idle-delay 0.500)
+    (setq lsp-log-io nil)
+    ;; Annoying lsp stuff
+    (setq lsp-headerline-breadcrumb-enable nil)
+    (setq lsp-enable-links nil)
+    (setq lsp-signature-render-documentation nil)
+    (setq lsp-ui-doc-enable nil)
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (setq web-mode-enable-current-element-highlight t))
 
 
 ;; lsp-ui
@@ -108,25 +106,24 @@
 ;; company
 (use-package company
     :after
-        lsp-mode
+    lsp-mode
     :hook
-        (lsp-mode . company-mode)
+    (lsp-mode . company-mode)
     :bind
-        (:map company-active-map ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map ("<tab>" . company-indent-or-complete-common))
+    (:map company-active-map ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map ("<tab>" . company-indent-or-complete-common))
     :custom
-        (company-minimum-prefix-length 1)
-        (company-idle-delay 0.0))
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
 
 ;; company-box
 (use-package company-box
-    :hook
-        (company-mode . company-box-mode))
+    :hook (company-mode . company-box-mode))
 
 ;; Dired
 (setq dired-listing-switches "-agho --group-directories-first")
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; global hooks
-;;(add-hook 'c-mode-hook 'development-mode)
-
+(add-hook 'c-mode-hook 'rc/development-mode)
+(add-hook 'emacs-lisp-mode-hook #'company-mode)

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+unset TMUX
+exec /usr/bin/env tmux -f ~/.config/tmux/tmux.conf -u "$@"

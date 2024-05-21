@@ -1,0 +1,12 @@
+live_config_reload = true
+
+[font]
+size = 9.5
+
+[font.normal]
+family = "IosevkaTerm NFM"
+style = "Regular"
+
+[window]
+dynamic_padding = true
+opacity = 0.9

@@ -1,0 +1,110 @@
+#!/bin/bash
+# Screenshot: http://s.natalian.org/2013-08-17/dwm_status.png
+# Network speed stuff stolen from http://linuxclues.blogspot.sg/2009/11/shell-script-show-network-speed.html
+
+# This function parses /proc/net/dev file searching for a line containing $interface data.
+# Within that line, the first and ninth numbers after ':' are respectively the received and transmited bytes.
+function get_bytes {
+    #Find active network interface
+    interface=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
+    line=$(grep $interface /proc/net/dev | cut -d ':' -f 2 | awk '{print "received_bytes="$1, "transmitted_bytes="$9}')
+    eval $line
+    now=$(date +%s%N)
+}
+
+# Function which calculates the speed using actual and old byte number.
+# Speed is shown in KByte per second when greater or equal than 1 KByte per second.
+# This function should be called each second.
+
+function get_velocity {
+    value=$1
+    old_value=$2
+    now=$3
+
+    timediff=$(($now - $old_time))
+    velKB=$(echo "1000000000*($value-$old_value)/1024/$timediff" | bc)
+    if test "$velKB" -gt 1024
+    then
+	echo $(echo "scale=2; $velKB/1024" | bc)MB/s
+    else
+	echo ${velKB}KB/s
+    fi
+}
+
+# Get initial values
+get_bytes
+old_received_bytes=$received_bytes
+old_transmitted_bytes=$transmitted_bytes
+old_time=$now
+
+print_volume() {
+    volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+    is_muted="$(amixer get Master | egrep "^  Mono"| cut -d"[" -f 4 | cut -d"]" -f 1)"
+
+    if [[ $is_muted == on ]]; then
+	echo -e "V:${volume}%"
+    else
+	echo -e "V:*muted*"
+    fi
+}
+
+print_wifi() {
+    ip=$(ip route get 8.8.8.8 2>/dev/null | grep -Eo 'src [0-9.]+' | grep -Eo '[0-9.]+')
+    ssid=$(iw wlp3s0 link | awk '/SSID/ { print $2 }')
+    case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
+	down) wifistatus="*down*" ;;
+	up) wifistatus="$(awk '/^\s*w/ { print int($3 * 100 / 70)"%" }' /proc/net/wireless)" ;;
+    esac
+
+    printf "W:%s %s@%s" "$wifistatus" "$ssid" "$ip"
+}
+
+print_mem() {
+    available_mem=$(free -h | sed -n '2{p;q}' | awk '{ print $7}')
+    printf "🧠%sB" "$available_mem"
+}
+
+print_temp(){
+    temp=$(sensors | awk '/Core 0/ {print $3}')
+    echo -e "T:${temp}"
+}
+
+print_battery(){
+	hash acpi || return 0
+	onl="$(grep "on-line" <(acpi -V))"
+	charge="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
+	if test -z "$onl"
+	then
+        # On battery!
+		echo -e "B:-${charge}%"
+	else
+		# On mains! no need to suspend
+		echo -e "B:+${charge}"%
+	fi
+}
+
+
+print_date(){
+    date="$(date "+%Y-%m-%d(%a) %I:%M%p")"
+    echo -e "${date}"
+}
+
+while true
+do
+    # Get new transmitted, received byte number values and current time
+    get_bytes
+
+    # Calculates speeds
+    vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
+    vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
+
+    #xsetroot -name "$(print_vol) rx:$vel_recv tx:$vel_trans $(print_mem) $(print_temp) $(print_wifi) $(print_bat) $(print_date)"
+    xsetroot -name "$(print_wifi) | $(print_temp) | $(print_volume)| $(print_battery) | $(print_date)"
+
+    # Update old values to perform new calculations
+    old_received_bytes=$received_bytes
+    old_transmitted_bytes=$transmitted_bytes
+    old_time=$now
+
+    sleep 1
+done

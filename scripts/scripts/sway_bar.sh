@@ -24,16 +24,14 @@ print_wifi(){
 }
 
 print_battery(){
-	hash acpi || return 0
-	charge="$(awk '{ sum += $1 } END { print sum }' /sys/class/power_supply/BAT*/capacity)"
-        battery_status=$(acpi -V | grep "on-line")
-	if test -z "$battery_status"
-	then
-        # On battery!
-		echo -e "B:-${charge}%"
+	capacity="$(cat /sys/class/power_supply/BAT*/capacity)"
+        battery_status="$(cat /sys/class/power_supply/BAT*/status)"
+	if [[ $battery_status == "Discharging" ]]; then
+		# On battery!
+		echo -e "B:-${capacity}%"
 	else
 		# On mains! no need to suspend
-		echo -e "B:+${charge}%"
+		echo -e "B:+${capacity}%"
 	fi
 }
 

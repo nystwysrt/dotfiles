@@ -5,7 +5,6 @@ stty -ixon # Disable ctrl-s and ctrl-q.
 HISTSIZE= HISTFILESIZE= # Infinite history.
 
 ### aliases
-alias t2wrc="cd /usr/src/t2-wrc"
 alias t2src="cd /usr/src/t2-src"
 alias :s="sudo"
 alias ka="killall"
@@ -35,7 +34,7 @@ alias dm3="cd ~/projects/dm3"
 # Faster cd to directory
 alias dot="cd $DOTFILES"
 alias scripts="cd $SCRIPTS"
-alias repos="cd ~/Repos"
+alias repos="cd ~/repos"
 
 # XBPS
 alias xi='sudo xbps-install'

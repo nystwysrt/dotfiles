@@ -8,7 +8,7 @@ input <identifier> repeat_delay 250
 input <identifier> repeat_rate 50
 
 # Fonts
-font pango:IosevkaTerm NFM Regular 13
+font pango:IosevkaTerm NFM Regular 14
 
 ### Variables
 #
@@ -27,7 +27,7 @@ set $term alacritty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | wmenu -f "IosevkaTerm NFM Regular Light 13" | xargs swaymsg exec --
+set $menu dmenu_path | wmenu -f "IosevkaTerm NFM Regular Light 14" | xargs swaymsg exec --
 
 # Window decoratons
 default_border pixel 1

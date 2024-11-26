@@ -27,19 +27,10 @@ alias gc="git commit -m"
 alias gpush="git push"
 alias gpull="git pull"
 
-# Projects dir
-alias dm2="cd ~/projects/dm2"
-alias dm3="cd ~/projects/dm3"
-
 # Faster cd to directory
 alias dot="cd $DOTFILES"
 alias scripts="cd $SCRIPTS"
 alias repos="cd ~/repos"
-
-# XBPS
-alias xi='sudo xbps-install'
-alias xr='sudo xbps-remove'
-alias xq='sudo xbps-query -Rs'
 
 alias libopencm3-template="git clone --recurse-submodules https://github.com/libopencm3/libopencm3-template.git"
 

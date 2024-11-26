@@ -4,8 +4,8 @@ input "type:keyboard" {
 }
 
 # Typematic and delay rate
-input <identifier> repeat_delay 250
-input <identifier> repeat_rate 50
+input <identifier> repeat_delay 100
+input <identifier> repeat_rate 30
 
 # Fonts
 font pango:IosevkaTerm NFM Regular 11

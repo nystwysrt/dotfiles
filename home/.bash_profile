@@ -16,7 +16,8 @@ export READER="zathura"
 export ARDUINO="/opt/arduino-ide_2.3.2"
 export SBIN="/sbin"
 export USRSBIN="/usr/sbin"
-export PATH="$PATH:$SCRIPTS:$ARDUINO:$SBIN:$USRSBIN"
+export DOOM="~/.config/emacs/bin"
+export PATH="$PATH:$SCRIPTS:$ARDUINO:$SBIN:$USRSBIN:$DOOM"
 
 # Auto start the X11 server if on tty1
 #[[ -z "$DISPLAY" ]] && [[ "$(tty)" = /dev/tty1 ]] && startx

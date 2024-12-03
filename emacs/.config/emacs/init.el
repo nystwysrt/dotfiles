@@ -1,7 +1,6 @@
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file 'no-error)
 
-(add-to-list 'default-frame-alist '(font, "IosevkaTerm NFM Regular-14"))
 (setq inhibit-startup-message 1)
 
 (menu-bar-mode -1)
